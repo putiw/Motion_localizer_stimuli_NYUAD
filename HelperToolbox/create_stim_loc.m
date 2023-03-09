@@ -178,27 +178,45 @@ end
 
 
         %% MT
-          
-       whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
-       tme = 0;
+
+%        whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
+%        tme = 1/VP.frameRate:pa.blockDuration*VP.frameRate*2*pa.nRepBlock;
+%        tmp = [];
+%        
+%        %            
+%        for nn = 1:pa.blockDuration*VP.frameRate*2*pa.nRepBlock
+%             if whichCon(nn) == 1
+%             [x y] = pol2cart(pa.theta, pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*tme(nn)+pa.phi));
+%             else
+%                 x = x;
+%                 y = y;
+%             end           
+%             tmp(ap,c,:,:,nn,1) = [x'+VP.dstCenter(1), x'+VP.dstCenter(1), y'+VP.dstCenter(2), repelem(dotPixelSize(1),size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
+%        end
+%        dotMatrix.mt = squeeze(tmp(1,1,:,:,:));
+%         
+       %% MST
+       
+        whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
+       tme = 1/VP.frameRate:1/VP.frameRate:pa.blockDuration*2*pa.nRepBlock;
        tmp = [];
        
-       %      
-       
+       %            
        for nn = 1:pa.blockDuration*VP.frameRate*2*pa.nRepBlock
-            tme = tme+1/VP.frameRate;
             if whichCon(nn) == 1
-            [x y] = pol2cart(pa.theta'-(pa.angle/2), pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*tme+pa.phi));
-
+            [x y] = pol2cart(pa.theta, pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*tme(nn)+pa.phi));
             else
                 x = x;
                 y = y;
             end           
-            tmp(ap,c,:,:,nn,1) = [x', x', y', repelem(dotPixelSize(1),size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
+            tmp(ap,c,:,:,nn,1) = [x'+VP.dstCenter(1), x'+VP.dstCenter(1), y'+VP.dstCenter(2), repelem(dotPixelSize(1),size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
        end
        dotMatrix.mt = squeeze(tmp(1,1,:,:,:));
               
-       %%
+
+       
+
+       %% FST
               
        condition = {'cd1','cd4'};      
        for iCon = 1:2  

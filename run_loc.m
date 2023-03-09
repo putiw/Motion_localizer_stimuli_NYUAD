@@ -1,5 +1,6 @@
 function [VP, pa] = run_loc(whichLoc)
 
+PsychDefaultSetup(2);
 display = 2; % 1-AD % 2-laptop % 3-NY
 if nargin < 1 || isempty(whichLoc)
     whichLoc = 'mt';  %mt, cd4, cd1
@@ -11,7 +12,7 @@ data = [];
 global GL; % GL data structure needed for all OpenGL demos
 backGroundColor = [0 0 0]; %[0.5 0.5 0.5].*255; % Gray-scale - calibrate for display so white and black dots have same contrast with background
 skipSync = 1; % skip Sync to deal with sync issues (should be for debugging only)
-VP = SetupDisplay_loc(skipSync, backGroundColor, display);
+VP = SetupDisplay_loc(skipSync, backGroundColor, display,whichLoc);
 if VP.stereoMode == 8 && display ~=2
     Datapixx('SetPropixxDlpSequenceProgram',1); % 1 is for RB3D mode, 3 for setting up to 480Hz, 5 for 1440Hz
     Datapixx('RegWr');    
@@ -22,7 +23,17 @@ end
 VP.backGroundColor = backGroundColor;
 priorityLevel=MaxPriority(VP.window);
 Priority(priorityLevel);
+
 pa = SetupParameters_loc(VP);
+switch whichLoc
+    case 'mstL'      
+    pa = UpdateParameters_mst(VP,pa,1); 
+    whichLoc = 'mt';
+    case 'mstR'
+    pa = UpdateParameters_mst(VP,pa,2);
+    whichLoc = 'mt';
+end
+
 pa.response = zeros(pa.numberOfTrials,1);
 kb = SetupKeyboard();
 pa.trialNumber = 0;
@@ -40,8 +51,7 @@ Screen('SelectStereoDrawbuffer', VP.window, 1);
 Screen('DrawText', VP.window, 'Preparing Experiment...',VP.Rect(3)/2-130,VP.Rect(4)/2);
 VP.vbl = Screen('Flip', VP.window, [], dontClear);
 
-%create_stim_loc(VP,pa);
-
+create_stim_loc(VP,pa);
 load('DotBank.mat')
 pa.current_stimulus = dotMatrix.(char(whichLoc));
 
@@ -52,6 +62,8 @@ GetSecs; KbCheck;
 kbIdx = GetKeyboardIndices;
 
 whichFn = 1;
+positions   = allcomb(d2r(pa.thetaDirs), pa.rDirs.*VP.pixelsPerDegree );
+[centerX, centerY]     = pol2cart(positions(:,1), positions(:,2));
 %% Experiment Starts
 while ~kb.keyCode(kb.escKey) && OnGoing
     
@@ -75,10 +87,16 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 pa.dotPosition = [pa.current_stimulus(:,view+1,fn), pa.current_stimulus(:,3,fn)].*VP.pixelsPerMm;
                 Screen('DrawDots',VP.window, pa.dotPosition', pa.current_stimulus(:,4,fn), colors', [VP.Rect(3)/2, VP.Rect(4)/2], 2);
                 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
-                if pa.timeStamps(whichFn,3) == 1
-                    Screen('DrawText', VP.window,'o',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
+                
+%                 if pa.timeStamps(whichFn,3) == 1
+%                     Screen('DrawText', VP.window,'o',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
+%                 else
+%                     Screen('DrawText', VP.window,'+',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
+%                 end
+                              if pa.timeStamps(whichFn,3) == 1
+                    Screen('DrawText', VP.window,'o',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 else
-                    Screen('DrawText', VP.window,'+',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
+                    Screen('DrawText', VP.window,'+',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 end
             end
             
@@ -96,13 +114,14 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 pa.fn(whichFn,1) = fn;
             end
             
-            whichFn = whichFn +1;
-            
-            if pa.timeStamps(whichFn,1)>size(pa.current_stimulus,3)*(1/pa.numFlips)
+                       
+            if (pa.timeStamps(whichFn,1)>=size(pa.current_stimulus,3)*(1/pa.numFlips))||fn>=size(pa.current_stimulus,3)
                 pause(pa.endDur)
                 OnGoing = 0; % End experiment
                 break;
             end
+            
+            whichFn = whichFn +1;
             
     end
     
