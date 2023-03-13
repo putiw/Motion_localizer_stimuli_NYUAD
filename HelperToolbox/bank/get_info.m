@@ -1,26 +1,27 @@
-function filename = get_info
+function filename = get_info(whichLoc)
 BASE  = [pwd '/results/'];
 keepasking = true;
 while keepasking
-    prompt = {'Subject ID: ', 'Session: ', 'Run: '};
+    prompt = {'Task: ', 'Subject ID: ', 'Session: ', 'Run: '};
     numlines = 1;
     title = 'Experiment Parameters';
-    defAns = {'9999', '01', '1'};
+    defAns = {whichLoc,'9999', '01', '1'};
     info = inputdlg(prompt, title, numlines, defAns);
     
-    subID = info{1};
-    session = str2double(info{2});
-    run = str2double(info{3});
+    taskName = info{1};
+    subID = info{2};
+    session = str2double(info{3});
+    run = str2double(info{4});
     
     % First, create the data file which will store the results and
     % find out if the file is already present, so you don't overwrite
     % and existing file
-    filename = [BASE,'sub-' subID,'_ses-',sprintf('%02d',session),'_task-cue_run-', info{3},'_' datestr(now,30) '.mat'];
+    filename = [BASE,'sub-' subID,'_ses-',sprintf('%02d',session),'_task-' info{1} '_run-', info{4},'_' datestr(now,30) '.mat'];
     % check response and ask again
     if ~ischar(subID) || length(subID)~=4
         disp('error! please enter 4 digit numerical for ID')
         keepasking = true;
-    elseif isnan(session) || length(info{2})<1 || length(info{2})>3
+    elseif isnan(session) || length(info{3})<1 || length(info{3})>3
         disp('error! please enter 2 digit numerical for session')
         keepasking = true;
     elseif isnan(run)

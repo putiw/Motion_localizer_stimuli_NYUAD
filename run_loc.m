@@ -2,11 +2,14 @@ function [VP, pa] = run_loc(whichLoc)
 
 PsychDefaultSetup(2);
 display = 2; % 1-AD % 2-laptop % 3-NY
-if nargin < 1 || isempty(whichLoc)
-    whichLoc = 'mt';  %mt, cd4, cd1
+if nargin < 1 || isempty(whichLoc) % pick left mt by default given empty
+     whichLoc = 'mt'; 
+elseif strcmp(whichLoc, 'mst') % pick left mst by default given mst
+     whichLoc = 'mstL';
 end
+
 addpath(genpath('HelperToolbox'));
-filename = get_info;
+filename = get_info(whichLoc);
 %% Setup parameters and viewing geometry
 data = [];
 global GL; % GL data structure needed for all OpenGL demos
@@ -25,13 +28,8 @@ priorityLevel=MaxPriority(VP.window);
 Priority(priorityLevel);
 
 pa = SetupParameters_loc(VP);
-switch whichLoc
-    case 'mstL'      
-    pa = UpdateParameters_mst(VP,pa,1); 
-    whichLoc = 'mt';
-    case 'mstR'
-    pa = UpdateParameters_mst(VP,pa,2);
-    whichLoc = 'mt';
+if strcmp(whichLoc, 'mstR') || strcmp(whichLoc, 'mstL') 
+    pa = UpdatePa_mst(VP,pa,whichLoc); % need to update parameters for mst
 end
 
 pa.response = zeros(pa.numberOfTrials,1);
@@ -51,7 +49,7 @@ Screen('SelectStereoDrawbuffer', VP.window, 1);
 Screen('DrawText', VP.window, 'Preparing Experiment...',VP.Rect(3)/2-130,VP.Rect(4)/2);
 VP.vbl = Screen('Flip', VP.window, [], dontClear);
 
-create_stim_loc(VP,pa);
+create_stim_loc(VP,pa,whichLoc);
 load('DotBank.mat')
 pa.current_stimulus = dotMatrix.(char(whichLoc));
 
@@ -88,33 +86,29 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 Screen('DrawDots',VP.window, pa.dotPosition', pa.current_stimulus(:,4,fn), colors', [VP.Rect(3)/2, VP.Rect(4)/2], 2);
                 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
                 
-%                 if pa.timeStamps(whichFn,3) == 1
-%                     Screen('DrawText', VP.window,'o',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
-%                 else
-%                     Screen('DrawText', VP.window,'+',VP.Rect(3)./2-7.1,VP.Rect(4)/2-7);
-%                 end
-                              if pa.timeStamps(whichFn,3) == 1
+                
+                if pa.timeStamps(whichFn,3) == 1
                     Screen('DrawText', VP.window,'o',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 else
                     Screen('DrawText', VP.window,'+',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 end
+                
+                
             end
             
             VP.vbl = Screen('Flip', VP.window, [], dontClear); % Draw frame
             
-            if fn == 1 && skip == 0
+            if fn == 1 && skip == 0 % get time of very first frame and use this as an absolute reference 
                 pa.firstFrame = VP.vbl;
                 skip = 1;
-                pa.timeStamps(whichFn,1) = GetSecs - pa.firstFrame;
-                %timeSoFar = GetSecs - pa.firstFrame;
+                pa.timeStamps(whichFn,1) = GetSecs - pa.firstFrame; % time so far
             else
                 pa.timeStamps(whichFn,1) = GetSecs - pa.firstFrame;
-                %timeSoFar = GetSecs - pa.firstFrame;
-                fn = round(pa.timeStamps(whichFn,1)/(1/VP.frameRate));
+                fn = round(pa.timeStamps(whichFn,1)/(1/VP.frameRate)); % which frame should it be now
                 pa.fn(whichFn,1) = fn;
             end
             
-                       
+            % end experiment if time so far is longer than what it's supposed to be           
             if (pa.timeStamps(whichFn,1)>=size(pa.current_stimulus,3)*(1/pa.numFlips))||fn>=size(pa.current_stimulus,3)
                 pause(pa.endDur)
                 OnGoing = 0; % End experiment
@@ -125,7 +119,7 @@ while ~kb.keyCode(kb.escKey) && OnGoing
             
     end
     
-    % record response
+    % record response 
     [pa, kb, OnGoing] = check_resp(OnGoing,fn,pa,display,kb);
     
 end
