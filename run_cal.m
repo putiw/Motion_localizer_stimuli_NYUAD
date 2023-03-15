@@ -66,6 +66,8 @@ kbIdx = GetKeyboardIndices;
 whichFn = 1;
 positions   = allcomb(d2r(pa.thetaDirs), pa.rDirs.*VP.pixelsPerDegree );
 [centerX, centerY]     = pol2cart(positions(:,1), positions(:,2));
+[centerX2, centerY2] = pol2cart(d2r(pa.allPositions(1,1)), tand(pa.allPositions(1,2))*VP.screenDistance);
+
 whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
 
 %% Experiment Starts
@@ -97,7 +99,7 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                     x = x;
                     y = y;
                 end
-                pa.current_stimulus(:,:,fn) = [x'+centerX, x'+centerX, y'+centerY, repelem(pa.dotDiameter,size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
+                pa.current_stimulus(:,:,fn) = [x'+centerX2, x'+centerX2, y'+centerY2, repelem(pa.dotDiameter,size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
             end
             
             colors = pa.current_stimulus(:,5:7,fn);
