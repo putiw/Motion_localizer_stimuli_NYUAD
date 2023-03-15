@@ -1,7 +1,7 @@
 function [VP, pa] = run_loc(whichLoc)
 
 PsychDefaultSetup(2);
-display = 2; % 1-AD % 2-laptop % 3-NY
+display = 1; % 1-AD % 2-laptop % 3-NY
 if nargin < 1 || isempty(whichLoc) % pick left mt by default given empty
      whichLoc = 'mt'; 
 elseif strcmp(whichLoc, 'mst') % pick left mst by default given mst
@@ -78,6 +78,12 @@ while ~kb.keyCode(kb.escKey) && OnGoing
             
         case 1 % Begin drawing stimulus
             
+            
+            
+            %%
+         
+             
+            %%
             colors = pa.current_stimulus(:,5:7,fn);
             
             for view = 0:1 %VP.stereoViews

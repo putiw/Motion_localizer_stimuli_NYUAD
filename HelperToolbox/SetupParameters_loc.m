@@ -12,8 +12,8 @@ pa.rDirs = 0;                                                              % Ecc
 radius_stim = 0;                                                            % Eccentricity of stimulus
 pa.stimX_deg = radius_stim*cosd(thetas);                                 
 pa.stimY_deg = radius_stim*sind(thetas);
-pa.screenAperture = 4.5;                                             % stimulus size radius
-pa.borderPatch = 5;                                                % aperture size radius
+pa.screenAperture = 7.8;                                             % stimulus size radius
+pa.borderPatch = 8;                                                % aperture size radius
 pa.centerPatch = 0.25;                                    % fixation aperture size radius
 pa.numberOfDots = 100;     %22                                                 % number of dots
 
@@ -23,7 +23,7 @@ pa.trialDuration = 1;                                                      % dur
 pa.ITI = 0;                                                                % duration between stimuli
 pa.numberOfBlanks = 0; %
 pa.blockDuration = pa.numberOfRepeats*pa.trialDuration*2;   
-pa.endDur = 21; % blank screen time at the end
+pa.endDur = 0; % blank screen time at the end
 pa.fixationAcqDura = 0;                                                    % duration of fixation prior to stimulus
 pa.disparityLimit = 0.3;  %1                                               % using the same front and back disparity, what is the limit?
 pa.loops = 1;   % 1                                                           % # of times dots travel the volume (determines speed)
@@ -48,12 +48,12 @@ pa.allPositions = [pTH; pR]';
 
 % MT params
 pa.tf = 4; % temporal frequency
-pa.amp = 0.15*VP.pixelsPerDegree; % determines speed
+pa.amp = 0.3*VP.pixelsPerDegree; % determines speed
 pa.phi = 2*pi*rand(1,pa.numberOfDots); % random phi 
 rmin = tand(pa.centerPatch*1.05)*VP.screenDistance+pa.amp; 
 rmax = tand(pa.borderPatch*0.95)*VP.screenDistance-pa.amp;
 pa.theta = (2*pi .* rand(1,pa.numberOfDots))-2*pi;
-pa.r = (((rmax - rmin) .* (rand(1,pa.numberOfDots))) + rmin)';
+pa.r = (((rmax - rmin) .* (sqrt(rand(1,pa.numberOfDots)))) + rmin)';
 pa.phi = 2*pi*rand(1,pa.numberOfDots);
 
 

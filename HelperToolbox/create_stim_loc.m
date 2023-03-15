@@ -8,22 +8,30 @@ ap =1;
 c = 1;
 
 if strcmp(whichLoc, 'mt') || strcmp(whichLoc, 'mstR') || strcmp(whichLoc, 'mstL')
-    whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
-    tme = 1/VP.frameRate:1/VP.frameRate:pa.blockDuration*2*pa.nRepBlock;
-    tmp = [];
-    for nn = 1:pa.blockDuration*VP.frameRate*2*pa.nRepBlock
-        if whichCon(nn) == 1
-            [x y] = pol2cart(pa.theta, pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*tme(nn)+pa.phi));
-        else
-            x = x;
-            y = y;
-        end
-        tmp(ap,c,:,:,nn,1) = [x'+VP.dstCenter(1), x'+VP.dstCenter(1), y'+VP.dstCenter(2), repelem(pa.dotDiameter,size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
-    end
-    dotMatrix.(char(whichLoc))=squeeze(tmp(1,1,:,:,:));
-    
-elseif strcmp(whichLoc, 'fst')
-    
+%     whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
+%     tme = 1/VP.frameRate:1/VP.frameRate:pa.blockDuration*2*pa.nRepBlock;
+%     tmp = [];
+%     for nn = 1:pa.blockDuration*VP.frameRate*2*pa.nRepBlock
+%         if whichCon(nn) == 1
+%             
+%                         if strcmp(pa.conditionNames{1}, 'circular')
+%             [x y] = pol2cart(pa.theta+0.01.*sqrt(pa.r').*sin(ones(1,pa.numberOfDots).*2*pi*pa.tf.*tme(nn)+pa.phi), pa.r');
+% 
+%                         else
+%                [x y] = pol2cart(pa.theta, pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*tme(nn)+pa.phi));
+% 
+%                         end
+%             
+%         else
+%             x = x;
+%             y = y;
+%         end
+%         tmp(ap,c,:,:,nn,1) = [x'+VP.dstCenter(1), x'+VP.dstCenter(1), y'+VP.dstCenter(2), repelem(pa.dotDiameter,size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
+%     end
+%     dotMatrix.(char(whichLoc))=squeeze(tmp(1,1,:,:,:));
+%     
+dotMatrix.(char(whichLoc))=[];
+elseif strcmp(whichLoc, 'fst')    
     
     pa.nOD = round(pa.numberOfDots/2);
     for dir = 1:2

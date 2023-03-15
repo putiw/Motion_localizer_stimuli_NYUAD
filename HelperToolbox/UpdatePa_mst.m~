@@ -1,0 +1,66 @@
+function pa = UpdatePa_mst(VP,pa,whichLoc)
+
+% 10/25/2022 less dots, no fixation during stimulus, check disparity
+
+rng('shuffle'); % shuffle the random number generator seeds so you don't repeat!
+%rng('default');
+%% Stimulus Parameters
+% These are the locations of the stimuli
+if strcmp(whichLoc, 'mstL') 
+    thetas = 0;
+elseif strcmp(whichLoc, 'mstR')
+    thetas = 180;                                                                 % Polar angle(s) of stimulus
+end
+
+pa.thetaDirs = thetas;                                                           % Polar angle(s) of circle
+pa.rDirs = 8.5;                                                              % Eccentricity of circle
+radius_stim = 8.5;                                                            % Eccentricity of stimulus
+pa.stimX_deg = radius_stim*cosd(thetas);                                 
+pa.stimY_deg = radius_stim*sind(thetas);
+pa.screenAperture = 24.5;                                             % stimulus size radius
+pa.borderPatch = 25;                                                % aperture size radius
+pa.centerPatch = 15.5;                                    % fixation aperture size radius
+pa.numberOfDots = 100;     %22                                                 % number of dots
+
+
+pa.fixationAcqDura = 0;                                                    % duration of fixation prior to stimulus
+pa.disparityLimit = 0.3;  %1                                               % using the same front and back disparity, what is the limit?
+pa.loops = 1;   % 1                                                           % # of times dots travel the volume (determines speed)
+pa.reversePhi = 0;                                                         % dots change color on wrapping to reduce apparent motion
+pa.directions = [-1 1];                                                    % experiment directions (+1:towards, -1:away)
+pa.coherence = 1;                                                          % Motion coherence levels
+pa.conditionNames   = {'cd4','cd0'};          % Stimulus conditions
+pa.photo_align = 0;
+if VP.stereoMode == 1
+    pa.numFlips = floor(pa.trialDuration*VP.frameRate/2);                  % every other frame for each eye when in interleaved stereo mode
+else
+    pa.numFlips = floor(pa.trialDuration*VP.frameRate);                    % each frame to both eyes
+end
+
+[pTH,pR] = cart2pol(pa.stimX_deg, pa.stimY_deg);
+pTH = -rad2deg(pTH);
+if pTH < 0
+    pTH = 360 + pTH;
+end
+pa.allPositions = [pTH; pR]';
+
+
+% MST params
+
+pa.phi = 2*pi*rand(1,pa.numberOfDots); % random phi 
+rmin = tand(pa.centerPatch*1.05)*VP.screenDistance+pa.amp; 
+rmax = tand(pa.borderPatch*0.95)*VP.screenDistance-pa.amp;
+aa=[0 180]; 
+pa.theta = (aa(~ismember(aa,thetas))-60+120*rand(1,pa.numberOfDots))/180*pi;
+pa.theta(pa.theta>pi) = pa.theta(pa.theta>pi)-2*pi;
+pa.r = (((rmax - rmin) .* (sqrt(rand(1,pa.numberOfDots)))) + rmin)';
+pa.phi = 2*pi*rand(1,pa.numberOfDots);
+
+
+end
+
+
+
+
+
+
