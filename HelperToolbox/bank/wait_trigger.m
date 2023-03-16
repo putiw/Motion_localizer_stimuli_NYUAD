@@ -14,10 +14,12 @@ VP.vbl = Screen('Flip', VP.window, [], 0);
 %waiting for trigger
 switch display
     case 1 %nyuad
+        Datapixx('RegWrRd');
+        triggerStart = dec2bin(Datapixx('GetDinValues'));
         kb.keyIsDown = 0;
         while ~kb.keyIsDown
-            [kb,~] = CheckTrigger_MRI(kb); % if response with response button MRI
-            [kb,~] = CheckKeyboard(kb); % if response with keyboard
+            [kb,~] = CheckTrigger_MRI(kb,triggerStart); % if response with response button MRI
+           % [kb,~] = CheckKeyboard(kb); % if response with keyboard
             
         end
     case 2 %puti laptop

@@ -1,4 +1,4 @@
-function [kb,stop] = CheckResponseButton_MRI(kb)
+function [kb,stop] = CheckResponseButton_MRI(kb,triggerStart)
 
 % poll the response button (MRI) for a response
 stop = 0;
@@ -10,8 +10,8 @@ stop = 0;
 % % scanner
 Datapixx('RegWrRd');
 kbchk = dec2bin(Datapixx('GetDinValues'));
-kbchk(14);
-if kbchk(14) == '0'            
+% [kbchk(14) triggerStart(14)]
+if kbchk(14) ~= triggerStart(14)          
     kb.resp = 5;
     kb.keyIsDown = 1;
 

@@ -18,7 +18,7 @@ pa.centerPatch = 0.25;                                    % fixation aperture si
 pa.numberOfDots = 100;     %22                                                 % number of dots
 
 pa.numberOfRepeats = 5;                                             % number of blocks to complete
-pa.nRepBlock = 2;                                                       % number of repeats per block
+pa.nRepBlock = 15;                                                       % number of repeats per block
 pa.trialDuration = 1;                                                      % duration of stimulus
 pa.ITI = 0;                                                                % duration between stimuli
 pa.numberOfBlanks = 0; %
@@ -112,21 +112,10 @@ pa.fn = [];
 pa.timeStamps = [zeros(1,pa.totalFrames); repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*pa.numFlips,1)'; ...
     zeros(1,pa.totalFrames);nan(1,pa.totalFrames)]';
 
-
-min_num = 5*pa.numFlips;
-max_num = pa.totalFrames-5*pa.numFlips;
-
-% Generate a random permutation of the indices in the range
-idx = randperm(max_num-min_num+1) + min_num - 1;
-
-% Select the first 5 indices that are at least 300 apart from each other
-selected_numbers = idx(diff([0 idx]) >= 300);
-pa.selected_numbers = selected_numbers(1:5);
-
-rand_nums = rand(1, 10)*(800-200) + 200;
+rand_nums = rand(1, 60)*(800-200) + 200;
 
 repetition_counts = round(rand_nums / sum(rand_nums) * pa.totalFrames);
-original_vector = repmat([1;0],5,1);
+original_vector = repmat([1;0],30,1);
 new_vector = [];
 % Loop through each element of the original vector and repeat it
 for i = 1:length(original_vector)
@@ -138,7 +127,7 @@ end
 
 pa.timeStamps(1:numel(new_vector),3)=new_vector;
 
-
+%imagesc(pa.design(:,5))
 %% Savefile parameters
 pa.subjectName = 'Jim';
 pa.movie = 0;

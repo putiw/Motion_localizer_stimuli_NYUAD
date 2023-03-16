@@ -1,4 +1,4 @@
-function [VP, pa] = run_cal(whichLoc)
+function [VP, pa] = run_loc(whichLoc)
 
 PsychDefaultSetup(2);
 display = 1; % 1-AD % 2-laptop % 3-NY
@@ -49,13 +49,9 @@ Screen('SelectStereoDrawbuffer', VP.window, 1);
 Screen('DrawText', VP.window, 'Preparing Experiment...',VP.Rect(3)/2-130,VP.Rect(4)/2);
 VP.vbl = Screen('Flip', VP.window, [], dontClear);
 
-if strcmp(whichLoc, 'fst')
-    create_stim_loc(VP,pa,whichLoc);
-    load('DotBank.mat')
-    pa.current_stimulus = dotMatrix.(char(whichLoc));
-else
-    pa.current_stimulus = zeros(pa.numberOfDots,8,pa.totalFrames);
-end
+create_stim_loc(VP,pa,whichLoc);
+load('DotBank.mat')
+pa.current_stimulus = dotMatrix.(char(whichLoc));
 
 StateID = 0;
 OnGoing = 1;
@@ -66,10 +62,6 @@ kbIdx = GetKeyboardIndices;
 whichFn = 1;
 positions   = allcomb(d2r(pa.thetaDirs), pa.rDirs.*VP.pixelsPerDegree );
 [centerX, centerY]     = pol2cart(positions(:,1), positions(:,2));
-[centerX2, centerY2] = pol2cart(d2r(pa.allPositions(1,1)), tand(pa.allPositions(1,2))*VP.screenDistance);
-
-whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
-
 %% Experiment Starts
 while ~kb.keyCode(kb.escKey) && OnGoing
     
@@ -85,43 +77,33 @@ while ~kb.keyCode(kb.escKey) && OnGoing
             StateID = 1; % send to fixation point
             
         case 1 % Begin drawing stimulus
-                        
-            % if it's mt/mst, calculate dots in real time
-            % if it's fst, skip this section and use pre-calculated dots
-            if strcmp(whichLoc, 'mt') || strcmp(whichLoc, 'mstR') || strcmp(whichLoc, 'mstL')
-                if whichCon(fn) == 1
-                    if strcmp(pa.conditionNames{1}, 'circular')
-                        [x y] = pol2cart(pa.theta+0.01.*sqrt(pa.r').*sin(ones(1,pa.numberOfDots).*2*pi*pa.tf.*GetSecs+pa.phi), pa.r');
-                    else
-                        [x y] = pol2cart(pa.theta, pa.r'+pa.amp.*sin(ones(1,pa.numberOfDots).*pa.tf.*GetSecs+pa.phi));
-                    end
-                else
-                    x = x;
-                    y = y;
-                end
-                pa.current_stimulus(:,:,fn) = [x'+centerX2, x'+centerX2, y'+centerY2, repelem(pa.dotDiameter,size(x',1),1), repelem(pa.dotColor(1,:),size(x',1),1)];
-            end
             
+            
+            
+            %%
+         
+             
+            %%
             colors = pa.current_stimulus(:,5:7,fn);
+            
             for view = 0:1 %VP.stereoViews
                 Screen('SelectStereoDrawbuffer', VP.window, view);
                 pa.dotPosition = [pa.current_stimulus(:,view+1,fn), pa.current_stimulus(:,3,fn)].*VP.pixelsPerMm;
                 Screen('DrawDots',VP.window, pa.dotPosition', pa.current_stimulus(:,4,fn), colors', [VP.Rect(3)/2, VP.Rect(4)/2], 2);
                 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
-                               
+                
+                
                 if pa.timeStamps(whichFn,3) == 1
                     Screen('DrawText', VP.window,'o',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 else
                     Screen('DrawText', VP.window,'+',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
                 end
-                                
+                
+                
             end
-            %%
             
             VP.vbl = Screen('Flip', VP.window, [], dontClear); % Draw frame
             
-            % after every frame, calculate how much time has passed since the first frame
-            % and calculate which frame should next frame be (if it needs to catch up)
             if fn == 1 && skip == 0 % get time of very first frame and use this as an absolute reference 
                 pa.firstFrame = VP.vbl;
                 skip = 1;
@@ -139,7 +121,7 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 break;
             end
             
-            whichFn = whichFn +1; %goes to next frame
+            whichFn = whichFn +1;
             
     end
     
