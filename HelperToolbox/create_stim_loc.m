@@ -33,7 +33,7 @@ if strcmp(whichLoc, 'mt') || strcmp(whichLoc, 'mstR') || strcmp(whichLoc, 'mstL'
 dotMatrix.(char(whichLoc))=[];
 elseif strcmp(whichLoc, 'fst')    
     
-    pa.nOD = round(pa.numberOfDots/2);
+    pa.nOD = round(pa.numberOfDots/4);
     for dir = 1:2
         num_vecs = 10000;
         % Do this for each aperture if there are multiple defined

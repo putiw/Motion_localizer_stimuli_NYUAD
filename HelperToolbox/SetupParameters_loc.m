@@ -15,7 +15,7 @@ pa.stimY_deg = radius_stim*sind(thetas);
 pa.screenAperture = 7.8;                                             % stimulus size radius
 pa.borderPatch = 8;                                                % aperture size radius
 pa.centerPatch = 0.25;                                    % fixation aperture size radius
-pa.numberOfDots = 100;     %22                                                 % number of dots
+pa.numberOfDots = 200;     %22                                                 % number of dots
 
 pa.numberOfRepeats = 5;                                             % number of blocks to complete
 pa.nRepBlock = 15;                                                       % number of repeats per block

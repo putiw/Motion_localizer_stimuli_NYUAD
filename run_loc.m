@@ -167,3 +167,10 @@ end
 Datapixx('Close');
 toc
 end
+
+
+%% if black and white screen do this
+% Datapixx('Open');
+% Datapixx('SetPropixxDlpSequenceProgram',0);
+% Datapixx('RegWrRd');
+% Datapixx('Close');
