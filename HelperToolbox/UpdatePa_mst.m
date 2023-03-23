@@ -17,10 +17,10 @@ pa.rDirs = 8.5;                                                              % E
 radius_stim = 8.5;                                                            % Eccentricity of stimulus
 pa.stimX_deg = radius_stim*cosd(thetas);                                 
 pa.stimY_deg = radius_stim*sind(thetas);
-pa.screenAperture = 24.5;                                             % stimulus size radius
-pa.borderPatch = 25;                                                % aperture size radius
-pa.centerPatch = 15.5;                                    % fixation aperture size radius
-pa.numberOfDots = 200;     %22                                                 % number of dots
+pa.screenAperture = 30; %24.5    %30                                          % stimulus size radius
+pa.borderPatch = 30.2; % 25;      %30.2                                        % aperture size radius
+pa.centerPatch = 9.8; %15.5;   %9.8  %15.5;                          % fixation aperture size radius
+pa.numberOfDots = 200;                                                      % number of dots
 
 pa.coherence = 1;                                                          % Motion coherence levels
 pa.conditionNames   = {'cd4','cd0'};   %'circular'      % Stimulus conditions

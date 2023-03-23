@@ -2,7 +2,7 @@ function [VP, pa] = run_loc(whichLoc)
 
 PsychDefaultSetup(2);
 display = 1; % 1-AD % 2-laptop % 3-NY
-if nargin < 1 || isempty(whichLoc) % pick left mt by default given empty
+if nargin < 1 || isempty(whichLoc) % pick mt by default given empty
      whichLoc = 'mt'; 
 elseif strcmp(whichLoc, 'mst') % pick left mst by default given mst
      whichLoc = 'mstL';
