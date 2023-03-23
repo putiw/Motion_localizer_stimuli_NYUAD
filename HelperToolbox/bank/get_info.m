@@ -5,7 +5,7 @@ while keepasking
     prompt = {'Task: ', 'Subject ID: ', 'Session: ', 'Run: '};
     numlines = 1;
     title = 'Experiment Parameters';
-    defAns = {whichLoc,'9999', '01', '1'};
+    defAns = {whichLoc,'0248', '02', '1'};
     info = inputdlg(prompt, title, numlines, defAns);
     
     taskName = info{1};

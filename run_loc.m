@@ -44,9 +44,9 @@ VP = MakeTextures(pa,VP);
 %% Generate new dot matrices for quick drawing rather than doing the calculations between frames
 
 Screen('SelectStereoDrawbuffer', VP.window, 0);
-Screen('DrawText', VP.window, 'Preparing Experiment...',VP.Rect(3)/2-130,VP.Rect(4)/2);
+Screen('DrawText', VP.window, 'Preparing Experiment...L',VP.Rect(3)/2-130,VP.Rect(4)/2);
 Screen('SelectStereoDrawbuffer', VP.window, 1);
-Screen('DrawText', VP.window, 'Preparing Experiment...',VP.Rect(3)/2-130,VP.Rect(4)/2);
+Screen('DrawText', VP.window, 'Preparing Experiment...R',VP.Rect(3)/2-130,VP.Rect(4)/2);
 VP.vbl = Screen('Flip', VP.window, [], dontClear);
 
 if strcmp(whichLoc, 'fst')
