@@ -22,7 +22,7 @@ switch(Display) %Display Parameters
         VP.multiSample = 32;       % PTB will change automatically to max supported on your display
     case 1 % NYUAD
         VP.screenDistance = 880;   %mm
-        VP.IOD = 62.5;               %mm
+        VP.IOD = 66.5;               %mm
         VP.screenWidthMm = 711;
         %332.5;      %mm
         VP.screenHeightMm = VP.screenWidthMm*9/16; %207.8;     %mm

@@ -69,21 +69,20 @@ positions   = allcomb(d2r(pa.thetaDirs), pa.rDirs.*VP.pixelsPerDegree );
 [centerX2, centerY2] = pol2cart(d2r(pa.allPositions(1,1)), tand(pa.allPositions(1,2))*VP.screenDistance);
 
 whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
-tic
+
 %% Experiment Starts
 while ~kb.keyCode(kb.escKey) && OnGoing
     
     %% States control the experimental flow (e.g., inter trial interval, stimulus, response periods)
     switch StateID
-        case 0
-            
+        case 0            
             % waiting for trigger
             
             [VP kb] = wait_trigger(display,kb,VP)
             
             fn = 1;
             StateID = 1; % send to fixation point
-            
+            tic
         case 1 % Begin drawing stimulus
                         
             % if it's mt/mst, calculate dots in real time
@@ -134,7 +133,8 @@ while ~kb.keyCode(kb.escKey) && OnGoing
             
             % end experiment if time so far is longer than what it's supposed to be           
             if (pa.timeStamps(whichFn,1)>=size(pa.current_stimulus,3)*(1/pa.numFlips))||fn>=size(pa.current_stimulus,3)
-                pause(pa.endDur)
+                %pause(pa.endDur)
+                toc
                 OnGoing = 0; % End experiment
                 break;
             end
@@ -149,7 +149,7 @@ while ~kb.keyCode(kb.escKey) && OnGoing
 end
 
 %% Save your data
-toc
+
 save(filename,'pa','VP');
 
 %% Clean up
