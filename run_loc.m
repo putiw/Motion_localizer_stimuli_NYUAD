@@ -130,16 +130,16 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 fn = round(pa.timeStamps(whichFn,1)/(1/VP.frameRate)); % which frame should it be now
                 pa.fn(whichFn,1) = fn;
             end
-            
+            whichFn = whichFn +1; %goes to next frame
             % end experiment if time so far is longer than what it's supposed to be           
             if (pa.timeStamps(whichFn,1)>=size(pa.current_stimulus,3)*(1/pa.numFlips))||fn>=size(pa.current_stimulus,3)
                 %pause(pa.endDur)
                 toc
+                Screen('Flip', VP.window, [], dontClear);
                 OnGoing = 0; % End experiment
                 break;
             end
             
-            whichFn = whichFn +1; %goes to next frame
             
     end
     

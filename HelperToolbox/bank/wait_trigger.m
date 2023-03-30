@@ -19,7 +19,7 @@ switch display
         kb.keyIsDown = 0;
         while ~kb.keyIsDown
             [kb,~] = CheckTrigger_MRI(kb,triggerStart); % if response with response button MRI
-           %[kb,~] = CheckKeyboard(kb); % if response with keyboard
+           [kb,~] = CheckKeyboard(kb); % if response with keyboard
             
         end
     case 2 %puti laptop
