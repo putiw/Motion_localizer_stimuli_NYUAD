@@ -1,5 +1,9 @@
 function [VP, pa] = run_loc(whichLoc)
 
+% 'mt','mstL','mstR','fst'
+
+debugTrigger = 0;
+
 PsychDefaultSetup(2);
 display = 1; % 1-AD % 2-laptop % 3-NY
 if nargin < 1 || isempty(whichLoc) % pick mt by default given empty
@@ -40,7 +44,7 @@ dontClear = 0;
 
 kb = SetupKeyboard();
 VP = MakeTextures(pa,VP);
-
+VP.debugTrigger = debugTrigger;
 %% Generate new dot matrices for quick drawing rather than doing the calculations between frames
 
 Screen('SelectStereoDrawbuffer', VP.window, 0);
@@ -65,7 +69,7 @@ kbIdx = GetKeyboardIndices;
 
 whichFn = 1;
 positions   = allcomb(d2r(pa.thetaDirs), pa.rDirs.*VP.pixelsPerDegree );
-[centerX, centerY]     = pol2cart(positions(:,1), positions(:,2));
+[VP.centerX, VP.centerY]     = pol2cart(positions(:,1), positions(:,2));
 [centerX2, centerY2] = pol2cart(d2r(pa.allPositions(1,1)), tand(pa.allPositions(1,2))*VP.screenDistance);
 
 whichCon = repelem(repmat([1;2],pa.nRepBlock,1),pa.blockDuration*VP.frameRate);
@@ -109,9 +113,9 @@ while ~kb.keyCode(kb.escKey) && OnGoing
                 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
                                
                 if pa.timeStamps(whichFn,3) == 1
-                    Screen('DrawText', VP.window,'o',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
+                    Screen('DrawText', VP.window,'o',VP.Rect(3)./2+VP.centerX-7.1,VP.Rect(4)/2-7,repelem(VP.black,1,3));
                 else
-                    Screen('DrawText', VP.window,'+',VP.Rect(3)./2+centerX-7.1,VP.Rect(4)/2-7);
+                    Screen('DrawText', VP.window,'+',VP.Rect(3)./2+VP.centerX-7.1,VP.Rect(4)/2-7,repelem(VP.black,1,3));
                 end
                                 
             end

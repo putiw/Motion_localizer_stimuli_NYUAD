@@ -2,11 +2,11 @@ function [VP kb] = wait_trigger(display,kb,VP)
 
 Screen('SelectStereoDrawbuffer', VP.window, 0);
 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
-Screen('DrawText', VP.window, 'Waiting for trigger...',VP.Rect(3)/2-95,VP.Rect(4)/2);
+Screen('DrawText', VP.window, 'Waiting for trigger...',VP.Rect(3)./2+VP.centerX-95,VP.Rect(4)/2,[VP.whiteValue VP.whiteValue VP.whiteValue]);
 
 Screen('SelectStereoDrawbuffer', VP.window, 1);
 Screen('DrawTexture', VP.window, VP.bg(VP.curBg));
-Screen('DrawText', VP.window, 'Waiting for trigger...',VP.Rect(3)/2-95,VP.Rect(4)/2);
+Screen('DrawText', VP.window, 'Waiting for trigger...',VP.Rect(3)./2+VP.centerX-95,VP.Rect(4)/2,[VP.whiteValue VP.whiteValue VP.whiteValue]);
 
 VP.vbl = Screen('Flip', VP.window, [], 0);
 
@@ -18,8 +18,12 @@ switch display
         triggerStart = dec2bin(Datapixx('GetDinValues'));
         kb.keyIsDown = 0;
         while ~kb.keyIsDown
-            [kb,~] = CheckTrigger_MRI(kb,triggerStart); % if response with response button MRI
-           [kb,~] = CheckKeyboard(kb); % if response with keyboard
+            if VP.debugTrigger == 0
+                [kb,~] = CheckTrigger_MRI(kb,triggerStart); % if response with response button MRI
+            else
+                [kb,~] = CheckTrigger_MRI(kb,triggerStart); % by scanner
+                [kb,~] = CheckKeyboard(kb); % by hand
+            end
             
         end
     case 2 %puti laptop
